@@ -1,5 +1,5 @@
 ///
-/// Stellar by HTML5 UP
+/// Big Picture by HTML5 UP
 /// html5up.net | @ajlkn
 /// Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 ///
@@ -8,53 +8,67 @@
 
 	#footer {
 		@include vendor('display', 'flex');
-		@include vendor('flex-wrap', 'wrap');
-		@include padding(5em, 5em);
-		width: calc(100% + #{_size(element-margin)});
-		margin: 0 0 (_size(element-margin) * 1.5) (_size(element-margin) * -1);
+		@include vendor('align-items', 'center');
+		@include vendor('justify-content', 'space-between');
+		position: relative;
+		margin: 0;
+		line-height: 1em;
+		padding: 1.5em;
+		background: _palette(accent3, bg);
+		color: _palette(accent3, fg);
+		overflow: hidden;
 
 		> * {
-			width: calc(50% - #{_size(element-margin)});
-			margin-left: _size(element-margin);
+			margin-bottom: 0;
 		}
 
-		.copyright {
-			width: 100%;
-			margin: (_size(element-margin) * 1.25) 0 _size(element-margin) 0;
-			font-size: 0.8em;
-			text-align: center;
+		a {
+			color: inherit;
+
+			&:hover {
+				color: _palette(accent3, fg-bold);
+			}
 		}
 
-		@include breakpoint('<=large') {
-			@include padding(4em, 4em);
+		ul {
+			&.menu {
+				margin: 0;
+
+				li {
+					border-left-color: _palette(accent3, border);
+					font-size: 0.9em;
+				}
+			}
 		}
 
 		@include breakpoint('<=medium') {
-			@include padding(4em, 3em);
-			display: block;
-			margin: 0 0 (_size(element-margin) * 1.5) 0;
-			width: 100%;
+			@include vendor('flex-direction', 'column');
+			@include vendor('justify-content', 'center');
+			line-height: 1.5em;
+			text-align: center;
+			padding: 2em 1em 2em 1em;
 
 			> * {
-				width: 100%;
-				margin-left: 0;
-				margin-bottom: (_size(element-margin) * 1.5);
-			}
-
-			.copyright {
-				text-align: left;
+				margin: 0 0 1em 0;
 			}
 		}
 
 		@include breakpoint('<=small') {
-			@include padding(3em, 2em);
-		}
+			ul {
+				&.menu {
+					li {
+						border-left: none;
+						display: block;
+						line-height: inherit;
+						margin: 0.25em 0 0 0;
+						padding: 0.25em 0 0 0;
 
-		@include breakpoint('<=xsmall') {
-			@include padding(3em, 1.5em);
-		}
-
-		@include breakpoint('<=xsmall') {
-			@include padding(2.5em, 1em);
+						&:first-child {
+							margin-top: 0;
+							padding-top: 0;
+						}
+					}
+				}
+			}
 		}
 	}

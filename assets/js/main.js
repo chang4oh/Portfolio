@@ -1,5 +1,5 @@
 /*
-	Stellar by HTML5 UP
+	Big Picture by HTML5 UP
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
@@ -8,116 +8,212 @@
 
 	var	$window = $(window),
 		$body = $('body'),
-		$main = $('#main');
+		$header = $('#header'),
+		$all = $body.add($header);
 
 	// Breakpoints.
 		breakpoints({
-			xlarge:   [ '1281px',  '1680px' ],
-			large:    [ '981px',   '1280px' ],
-			medium:   [ '737px',   '980px'  ],
-			small:    [ '481px',   '736px'  ],
-			xsmall:   [ '361px',   '480px'  ],
-			xxsmall:  [ null,      '360px'  ]
+			xxlarge: [ '1681px',  '1920px' ],
+			xlarge:  [ '1281px',  '1680px' ],
+			large:   [ '1001px',  '1280px' ],
+			medium:  [ '737px',   '1000px' ],
+			small:   [ '481px',   '736px'  ],
+			xsmall:  [ null,      '480px'  ]
 		});
 
 	// Play initial animations on page load.
 		$window.on('load', function() {
-			window.setTimeout(function() {
+			setTimeout(function() {
 				$body.removeClass('is-preload');
 			}, 100);
 		});
 
-	// Nav.
-		var $nav = $('#nav');
+	// Touch mode.
+		if (browser.mobile)
+			$body.addClass('is-touch');
+		else {
 
-		if ($nav.length > 0) {
+			breakpoints.on('<=small', function() {
+				$body.addClass('is-touch');
+			});
 
-			// Shrink effect.
-				$main
-					.scrollex({
-						mode: 'top',
-						enter: function() {
-							$nav.addClass('alt');
-						},
-						leave: function() {
-							$nav.removeClass('alt');
-						},
-					});
-
-			// Links.
-				var $nav_a = $nav.find('a');
-
-				$nav_a
-					.scrolly({
-						speed: 1000,
-						offset: function() { return $nav.height(); }
-					})
-					.on('click', function() {
-
-						var $this = $(this);
-
-						// External link? Bail.
-							if ($this.attr('href').charAt(0) != '#')
-								return;
-
-						// Deactivate all links.
-							$nav_a
-								.removeClass('active')
-								.removeClass('active-locked');
-
-						// Activate link *and* lock it (so Scrollex doesn't try to activate other links as we're scrolling to this one's section).
-							$this
-								.addClass('active')
-								.addClass('active-locked');
-
-					})
-					.each(function() {
-
-						var	$this = $(this),
-							id = $this.attr('href'),
-							$section = $(id);
-
-						// No section for this link? Bail.
-							if ($section.length < 1)
-								return;
-
-						// Scrollex.
-							$section.scrollex({
-								mode: 'middle',
-								initialize: function() {
-
-									// Deactivate section.
-										if (browser.canUse('transition'))
-											$section.addClass('inactive');
-
-								},
-								enter: function() {
-
-									// Activate section.
-										$section.removeClass('inactive');
-
-									// No locked links? Deactivate all links and activate this section's one.
-										if ($nav_a.filter('.active-locked').length == 0) {
-
-											$nav_a.removeClass('active');
-											$this.addClass('active');
-
-										}
-
-									// Otherwise, if this section's link is the one that's locked, unlock it.
-										else if ($this.hasClass('active-locked'))
-											$this.removeClass('active-locked');
-
-								}
-							});
-
-					});
+			breakpoints.on('>small', function() {
+				$body.removeClass('is-touch');
+			});
 
 		}
 
-	// Scrolly.
-		$('.scrolly').scrolly({
-			speed: 1000
+	// Fix: IE flexbox fix.
+		if (browser.name == 'ie') {
+
+			var $main = $('.main.fullscreen'),
+				IEResizeTimeout;
+
+			$window
+				.on('resize.ie-flexbox-fix', function() {
+
+					clearTimeout(IEResizeTimeout);
+
+					IEResizeTimeout = setTimeout(function() {
+
+						var wh = $window.height();
+
+						$main.each(function() {
+
+							var $this = $(this);
+
+							$this.css('height', '');
+
+							if ($this.height() <= wh)
+								$this.css('height', (wh - 50) + 'px');
+
+						});
+
+					});
+
+				})
+				.triggerHandler('resize.ie-flexbox-fix');
+
+		}
+
+	// Gallery.
+		$window.on('load', function() {
+
+			var $gallery = $('.gallery');
+
+			$gallery.poptrox({
+				baseZIndex: 10001,
+				useBodyOverflow: false,
+				usePopupEasyClose: false,
+				overlayColor: '#1f2328',
+				overlayOpacity: 0.65,
+				usePopupDefaultStyling: false,
+				usePopupCaption: true,
+				popupLoaderText: '',
+				windowMargin: 50,
+				usePopupNav: true
+			});
+
+			// Hack: Adjust margins when 'small' activates.
+				breakpoints.on('>small', function() {
+					$gallery.each(function() {
+						$(this)[0]._poptrox.windowMargin = 50;
+					});
+				});
+
+				breakpoints.on('<=small', function() {
+					$gallery.each(function() {
+						$(this)[0]._poptrox.windowMargin = 5;
+					});
+				});
+
 		});
+
+	// Section transitions.
+		if (browser.canUse('transition')) {
+
+			var on = function() {
+
+				// Galleries.
+					$('.gallery')
+						.scrollex({
+							top:		'30vh',
+							bottom:		'30vh',
+							delay:		50,
+							initialize:	function() { $(this).addClass('inactive'); },
+							terminate:	function() { $(this).removeClass('inactive'); },
+							enter:		function() { $(this).removeClass('inactive'); },
+							leave:		function() { $(this).addClass('inactive'); }
+						});
+
+				// Generic sections.
+					$('.main.style1')
+						.scrollex({
+							mode:		'middle',
+							delay:		100,
+							initialize:	function() { $(this).addClass('inactive'); },
+							terminate:	function() { $(this).removeClass('inactive'); },
+							enter:		function() { $(this).removeClass('inactive'); },
+							leave:		function() { $(this).addClass('inactive'); }
+						});
+
+					$('.main.style2')
+						.scrollex({
+							mode:		'middle',
+							delay:		100,
+							initialize:	function() { $(this).addClass('inactive'); },
+							terminate:	function() { $(this).removeClass('inactive'); },
+							enter:		function() { $(this).removeClass('inactive'); },
+							leave:		function() { $(this).addClass('inactive'); }
+						});
+
+				// Contact.
+					$('#contact')
+						.scrollex({
+							top:		'50%',
+							delay:		50,
+							initialize:	function() { $(this).addClass('inactive'); },
+							terminate:	function() { $(this).removeClass('inactive'); },
+							enter:		function() { $(this).removeClass('inactive'); },
+							leave:		function() { $(this).addClass('inactive'); }
+						});
+
+			};
+
+			var off = function() {
+
+				// Galleries.
+					$('.gallery')
+						.unscrollex();
+
+				// Generic sections.
+					$('.main.style1')
+						.unscrollex();
+
+					$('.main.style2')
+						.unscrollex();
+
+				// Contact.
+					$('#contact')
+						.unscrollex();
+
+			};
+
+			breakpoints.on('<=small', off);
+			breakpoints.on('>small', on);
+
+		}
+
+	// Events.
+		var resizeTimeout, resizeScrollTimeout;
+
+		$window
+			.on('resize', function() {
+
+				// Disable animations/transitions.
+					$body.addClass('is-resizing');
+
+				clearTimeout(resizeTimeout);
+
+				resizeTimeout = setTimeout(function() {
+
+					// Update scrolly links.
+						$('a[href^="#"]').scrolly({
+							speed: 1500,
+							offset: $header.outerHeight() - 1
+						});
+
+					// Re-enable animations/transitions.
+						setTimeout(function() {
+							$body.removeClass('is-resizing');
+							$window.trigger('scroll');
+						}, 0);
+
+				}, 100);
+
+			})
+			.on('load', function() {
+				$window.trigger('resize');
+			});
 
 })(jQuery);
