@@ -106,6 +106,79 @@ input, select, textarea {
 			-ms-transition: none !important;
 			transition: none !important;
 		}
+/* Milestones */
+/* Add styles for the outer container */
+.outer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    width: 100vw; /* Full viewport width */
+    background-color: #f4f4f4; /* Ensure the background covers the entire viewport */
+    margin: 0; /* Remove default margin */
+}
+
+.milestones {
+    width: 80%;
+    max-width: 1200px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.milestone-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Center the items horizontally */
+}
+
+.milestone {
+    background: #f9f9f9;
+    width: 45%; /* Adjust width to ensure it fits well within the parent */
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+}
+
+.icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.date {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.description {
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .milestone {
+        width: 100%; /* Full width for smaller screens */
+    }
+}
+
+
+
+
 
 /* Spinner */
 
